@@ -100,7 +100,8 @@ def rank_dice(output, device, app=2, smooth=1., alpha=0.5, allow_overlap=True, t
                                 up=up_class[b,k], low=low_class[b,k])
                 pmf_tmp_zero = pmf_tmp_zero / torch.sum(pmf_tmp_zero)
                 best_score, opt_tau = 0., 0
-                best_score = smooth*torch.sum((1./(discount[low_class[b,k]:up_class[b,k]]+smooth))*pmf_tmp_zero)
+                if smooth > 0.:
+                    best_score = smooth*torch.sum((1./(discount[low_class[b,k]:up_class[b,k]]+smooth))*pmf_tmp_zero)
                 w_old = torch.zeros(up_class[b,k]-low_class[b,k], dtype=torch.float32, device=device)
                 for tau in range(1, up_tau[b,k]+1):
                     pb_mean_tmp = torch.maximum(pb_mean[b,k] - sorted_prob[b,k,tau-1], torch.tensor(0))
