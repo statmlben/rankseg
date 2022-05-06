@@ -30,6 +30,10 @@ def rank_dice(output, device, app=2, smooth=0., allow_overlap=True, truncate_mea
     ------
     predict: Tensor, shape (batch_size, num_class, width, height)
         The predicted segmentation based on `rankdice`.
+
+    Reference
+    ---------
+    
     """
     batch_size, num_class, width, height = output.shape
     output = torch.flatten(output, start_dim=-2, end_dim=-1)
