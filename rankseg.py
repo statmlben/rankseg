@@ -1,11 +1,37 @@
 import torch
 import math
-from scipy import stats, optimize, interpolate
+import scipy
 import torch.nn.functional as F
+from scipy.stats import rv_continuous
+import numpy as np
 
-def rank_dice(output, device, app=2, smooth=1., alpha=0.5, allow_overlap=True, truncate_mean=True, verbose=0):
+def rank_dice(output, device, app=2, smooth=0., allow_overlap=True, truncate_mean=True, verbose=0):
+    """
+    Produce the segmentation based on `rankdice` method based on output probability.
+
+    Parameters
+    ----------
+    output: Tensor, shape (batch_size, num_class, width, height)
+        The estimated probability tensor. 
+    device: String, {'cpu', 'cuda'}
+        Device class of `torch.device`.
+    app: int, {0, 1, 2}
+        The approximate method used in `rankdice` to evaluate `Dice`, `0` indicates exact evaluation, `1` indicates truncated refined normal approximation, and `2` indicates blind approximation.
+    smooth: float, default=0.0
+        A smooth parameter in Dice metric.
+    allow_overlap: bool, default=True
+        Whether allow the overlapping in the resulting segmentation.
+    truncate_mean: bool, default=True
+        Whether truncate mean the mean in refined normal approx.
+    verbose: bool, default=0
+        Whether print the results for each batch and class.
+
+    Return
+    ------
+    predict: Tensor, shape (batch_size, num_class, width, height)
+        The predicted segmentation based on `rankdice`.
+    """
     batch_size, num_class, width, height = output.shape
-    # output = torch.flatten(output.sigmoid(), start_dim=-2, end_dim=-1)
     output = torch.flatten(output, start_dim=-2, end_dim=-1)
     dim = output.shape[-1]
     predict = torch.zeros(batch_size, num_class, dim, dtype=torch.bool)
@@ -18,20 +44,17 @@ def rank_dice(output, device, app=2, smooth=1., alpha=0.5, allow_overlap=True, t
     sorted_prob, top_index = torch.sort(output, dim=-1, descending=True)
     cumsum_prob = torch.cumsum(sorted_prob, axis=-1)
     ratio_prob = cumsum_prob[:,:,:-1] / (sorted_prob[:,:,1:]+1e-5)
-    ## statistics
+    ## compute statistics
     if truncate_mean == True:
         pb_mean = 1.*( sorted_prob >= .5).sum(axis=-1)
-        pb_var = torch.sum(sorted_prob*(1-sorted_prob), axis=-1)
-        pb_m3 = torch.sum(sorted_prob*(1-sorted_prob)*(1 - 2*sorted_prob), axis=-1)
     else:
         pb_mean = sorted_prob.sum(axis=-1)
-        pb_var = torch.sum(sorted_prob*(1-sorted_prob), axis=-1)
-        pb_m3 = torch.sum(sorted_prob*(1-sorted_prob)*(1 - 2*sorted_prob), axis=-1)
 
+    pb_var = torch.sum(sorted_prob*(1-sorted_prob), axis=-1)
+    pb_m3 = torch.sum(sorted_prob*(1-sorted_prob)*(1 - 2*sorted_prob), axis=-1)
 
-    up_tau = torch.argmax(torch.where((ratio_prob - discount[1:dim] - smooth - dim) > 0, 1, 0), axis=-1)
+    up_tau = torch.argmax(torch.where(ratio_prob - discount[1:dim] - smooth - dim > 0, 1, 0), axis=-1)
     up_tau = torch.where(up_tau == 0, dim-1, up_tau)
-    # print(up_tau)
 
     # up_tau = torch.argmax(( ratio_prob - 1.  > 1.8*pb_mean.view(batch_size, num_class,1) )*1, axis=-1)
     ## normal approx domain
@@ -40,18 +63,18 @@ def rank_dice(output, device, app=2, smooth=1., alpha=0.5, allow_overlap=True, t
     #                                     dim=dim)
     low_class, up_class = app_action_set(pb_mean=pb_mean,
                                         pb_var=pb_var,
+                                        pb_m3=pb_m3,
+                                        device=device,
                                         dim=dim)
 
     for k in range(num_class):
         ## searching for optimal vol for each sample and each class
         for b in range(batch_size):
-            if sorted_prob[b,k,0] <= alpha:
+            if sorted_prob[b,k,0] <= .5:
                 ## pruning for predicted TP = FP = 0
                 continue
             elif pb_mean[b,k] <= 50:
                 up_tau[b,k] = 5*pb_mean[b,k] + 1
-                app_tmp = 1
-            elif ((up_class[b,k] - low_class[b,k]) > dim/2):
                 app_tmp = 1
             else:
                 app_tmp = app
@@ -65,6 +88,7 @@ def rank_dice(output, device, app=2, smooth=1., alpha=0.5, allow_overlap=True, t
                                 device=device,
                                 up=up_class[b,k], low=low_class[b,k])
                 pmf_tmp = pmf_tmp / torch.sum(pmf_tmp)
+                
                 # print('sum of pmf_tmp: %.3f' %torch.sum(pmf_tmp))
                 ## grid search for tau
                 # tau_range = torch.arange(low_class[b,k]+1, up_tau[b,k]+1, device=device)
@@ -73,6 +97,7 @@ def rank_dice(output, device, app=2, smooth=1., alpha=0.5, allow_overlap=True, t
                 # opt_add = torch.argmax(score_range)
                 # best_score, opt_tau = score_range[opt_add], low_class[b,k]+opt_add + 1
                 # print('TEST sample-%d; class-%d; tau_best: %d; score_best: %.4f' %(b, k, opt_tau, best_score))
+                
                 # # use convolutional layer
                 low_tmp, up_tmp = low_class[b,k], up_class[b,k]+up_tau[b,k]-1
                 with torch.backends.cudnn.flags(enabled=False, deterministic=True, benchmark=True):
@@ -100,7 +125,7 @@ def rank_dice(output, device, app=2, smooth=1., alpha=0.5, allow_overlap=True, t
                                 up=up_class[b,k], low=low_class[b,k])
                 pmf_tmp_zero = pmf_tmp_zero / torch.sum(pmf_tmp_zero)
                 best_score, opt_tau = 0., 0
-                if smooth > 0.:
+                if smooth > 0:
                     best_score = smooth*torch.sum((1./(discount[low_class[b,k]:up_class[b,k]]+smooth))*pmf_tmp_zero)
                 w_old = torch.zeros(up_class[b,k]-low_class[b,k], dtype=torch.float32, device=device)
                 for tau in range(1, up_tau[b,k]+1):
@@ -129,23 +154,45 @@ def rank_dice(output, device, app=2, smooth=1., alpha=0.5, allow_overlap=True, t
             cutpoint_rd[b,k] = sorted_prob[b,k,opt_tau]
     return predict.reshape(batch_size, num_class, width, height), tau_rd, cutpoint_rd
 
-def app_action_set(pb_mean, pb_var, dim, tol=1e-4):
-    label_app = torch.where(pb_var <= .1618/1e-1, True, False)
-    # label_app = torch.where(pb_var <= .1618/1e-1, True, False)
-    normal_rv = stats.norm(0, 1)
-    quantile = normal_rv.ppf(tol)
-    quantile = torch.tensor(quantile)
-    lower = torch.maximum(torch.floor(torch.sqrt(pb_var)*quantile + pb_mean) - 1, torch.tensor(0))
-    upper = torch.minimum(torch.ceil(-torch.sqrt(pb_var)*quantile + pb_mean), torch.tensor(dim))
-    lower[label_app] = 0
-    upper[label_app] = dim
+def app_action_set(pb_mean, pb_var, pb_m3, device, dim, tol=1e-4):
+    refined_normal = RN_rv()
+    skew = (pb_m3 / pb_var**(3/2)).cpu() + 1e-5
+    low_quantile = torch.tensor(refined_normal.ppf(tol, skew=skew), device=device)
+    up_quantile = torch.tensor(refined_normal.ppf(1-tol, skew=skew), device=device)
+    lower = torch.maximum(torch.floor(torch.sqrt(pb_var)*low_quantile + pb_mean) - 1, torch.tensor(0))
+    upper = torch.minimum(torch.ceil(torch.sqrt(pb_var)*up_quantile + pb_mean), torch.tensor(dim))
     return lower.type(torch.int), upper.type(torch.int)
 
-def PB_RNA(pb_mean, pb_var, pb_m3, device, up, low=0):
+# def app_action_set(pb_mean, pb_var, dim, tol=1e-4):
+#     label_app = torch.where(pb_var <= .1618/1e-1, True, False)
+#     # label_app = torch.where(pb_var <= .1618/1e-1, True, False)
+#     normal_rv = scipy.stats.norm(0, 1)
+#     quantile = normal_rv.ppf(tol)
+#     quantile = torch.tensor(quantile)
+#     lower = torch.maximum(torch.floor(torch.sqrt(pb_var)*quantile + pb_mean) - 1, torch.tensor(0))
+#     upper = torch.minimum(torch.ceil(-torch.sqrt(pb_var)*quantile + pb_mean), torch.tensor(dim))
+#     lower[label_app] = 0
+#     upper[label_app] = dim
+#     return lower.type(torch.int), upper.type(torch.int)
+
+def PB_RNA(pb_mean, pb_var, pb_m3, device, up, low=0, top=None):
     candidate = torch.arange(low-1, up, device=device)
     norm_rv = torch.distributions.normal.Normal(0,1)
     candidate_val = (candidate + 0.5 - pb_mean) / torch.sqrt(pb_var)
 
     cdf_tmp = norm_rv.cdf(candidate_val) + pb_m3*(1 - candidate_val**2)*torch.exp(norm_rv.log_prob(candidate_val)) / 6 / pb_var**(3/2)
     pmf_tmp = cdf_tmp[1:] - cdf_tmp[:-1]
+
+    if top != None:
+        if top < (up-low):
+            # split_val = torch.quantile(pmf_tmp, 1. - max(top/(up-low), 1e-3) )
+            split_val = torch.topk(pmf_tmp, top)[0][-1]
+            pmf_tmp[pmf_tmp < split_val] = float(0.)
+            pmf_tmp = pmf_tmp / pmf_tmp.sum()
     return torch.minimum(torch.maximum(pmf_tmp, torch.tensor(0)), torch.tensor(1))
+
+class RN_rv(rv_continuous):
+    def _argcheck(self, skew):
+        return np.isfinite(skew)
+    def _cdf(self, x, skew):
+        return scipy.stats.norm.cdf(x) + skew*(1 - x**2)*scipy.stats.norm.pdf(x)/6
