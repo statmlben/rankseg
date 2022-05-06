@@ -107,7 +107,6 @@ def rank_dice(output, device, app=2, smooth=0., allow_overlap=True, truncate_mea
                 score_range = w_range + nu_range
                 score_range = score_range.flatten()
                 # opt_add = torch.argmax(score_range)
-                # best_score, opt_tau = score_range[opt_add], low_class[b,k]+opt_add + 1
                 opt_tau = torch.argmax(score_range)+1
                 best_score = score_range[opt_tau-1]
                 score_zero = smooth*torch.sum( (1./(discount[low_class[b,k]:up_class[b,k]]+smooth)) * pmf_tmp )
