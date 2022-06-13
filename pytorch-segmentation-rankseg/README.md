@@ -19,7 +19,7 @@ This repo is forked from [yassouali/pytorch-segmentation](https://github.com/yas
     python test.py -r saved/cityscapes/FCN8/FocalLoss/T/04-28_10-49/checkpoint-epoch300.pth -p "rankdice"
     ```
 
-Following is the original readme file in [yassouali/pytorch-segmentation](https://github.com/yassouali/pytorch-segmentation)
+Following is the original README file from [yassouali/pytorch-segmentation](https://github.com/yassouali/pytorch-segmentation)
 
 ---
 [![MIT License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)

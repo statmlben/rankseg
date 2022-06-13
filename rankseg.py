@@ -1,3 +1,6 @@
+# Author: Ben Dai <bendai@cuhk.edu.hk>
+# License: BSD 3 clause
+
 import torch
 import math
 import scipy
@@ -7,22 +10,28 @@ import numpy as np
 
 def rank_dice(output, device, app=2, smooth=0., allow_overlap=True, truncate_mean=True, verbose=0):
     """
-    Produce the segmentation based on `rankdice` method based on output probability.
+    Produce the predicted segmentation by `rankdice` based on the estimated output probability.
 
     Parameters
     ----------
     output: Tensor, shape (batch_size, num_class, width, height)
         The estimated probability tensor. 
+
     device: String, {'cpu', 'cuda'}
         Device class of `torch.device`.
+    
     app: int, {0, 1, 2}
-        The approximate method used in `rankdice` to evaluate `Dice`, `0` indicates exact evaluation, `1` indicates truncated refined normal approximation, and `2` indicates blind approximation.
+        The approximate algo used to implement `rankdice`. `0` indicates exact evaluation, `1` indicates the truncated refined normal approximation (T-RNA), and `2` indicates the blind approximation (BA).
+    
     smooth: float, default=0.0
-        A smooth parameter in Dice metric.
+        A smooth parameter in the Dice metric.
+    
     allow_overlap: bool, default=True
         Whether allow the overlapping in the resulting segmentation.
+    
     truncate_mean: bool, default=True
         Whether truncate mean the mean in refined normal approx.
+    
     verbose: bool, default=0
         Whether print the results for each batch and class.
 
@@ -30,6 +39,12 @@ def rank_dice(output, device, app=2, smooth=0., allow_overlap=True, truncate_mea
     ------
     predict: Tensor, shape (batch_size, num_class, width, height)
         The predicted segmentation based on `rankdice`.
+
+    tau_rd: Tensor, shape (batch_size, num_class)
+        The total number of segmentation pixels
+
+    cutpoint_rd: Tensor, shape (batch_size, num_class)
+        The cutpoint of probabilties of segmentation pixels and non-segmentation pixels
 
     Reference
     ---------
@@ -78,6 +93,7 @@ def rank_dice(output, device, app=2, smooth=0., allow_overlap=True, truncate_mea
                 ## pruning for predicted TP = FP = 0
                 continue
             elif pb_mean[b,k] <= 50:
+                ## mean is too small; it is too risky to use BA
                 up_tau[b,k] = 5*pb_mean[b,k] + 1
                 app_tmp = 1
             else:
@@ -188,7 +204,6 @@ def PB_RNA(pb_mean, pb_var, pb_m3, device, up, low=0, top=None):
 
     if top != None:
         if top < (up-low):
-            # split_val = torch.quantile(pmf_tmp, 1. - max(top/(up-low), 1e-3) )
             split_val = torch.topk(pmf_tmp, top)[0][-1]
             pmf_tmp[pmf_tmp < split_val] = float(0.)
             pmf_tmp = pmf_tmp / pmf_tmp.sum()
