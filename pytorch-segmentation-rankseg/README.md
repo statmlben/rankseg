@@ -12,12 +12,49 @@ This repo is forked from [yassouali/pytorch-segmentation](https://github.com/yas
                     "val": "max",
                     "test": "rankdice"}
     ``` 
-- [x] `test.py` to report the score for a testing set, with three options to produce segmentation, for example
-    ```bash
-    python test.py -r saved/cityscapes/FCN8/FocalLoss/T/04-28_10-49/checkpoint-epoch300.pth -p "T"
-    python test.py -r saved/cityscapes/FCN8/FocalLoss/T/04-28_10-49/checkpoint-epoch300.pth -p "max"
-    python test.py -r saved/cityscapes/FCN8/FocalLoss/T/04-28_10-49/checkpoint-epoch300.pth -p "rankdice"
-    ```
+- [x] `test.py` to report the score for a testing set, with three options to produce segmentation: `rankdice`, `max` and `T`:
+```bash
+## rankdice
+$ python test.py -r saved/cityscapes/PSPNet/CrossEntropyLoss2d/T/05-04_13-08/checkpoint-epoch300.pth -p "rankdice"
+
+TEST, Pred (rankdice) | Loss: 0.159, PixelAcc: 0.99, Mean IoU: 0.51, Mean Dice 0.59 |: 100%|██████| 84/84 [01:03<00:00,  1.33it/s]
+
+    ## TESTING Restuls for Model: PSPNet + Loss: CrossEntropyLoss2d + predict: rankdice ## 
+         test_loss      : 0.15925
+         Pixel_Accuracy : 0.9879999756813049
+         Mean_IoU       : 0.5099999904632568
+         Mean_Dice      : 0.5929999947547913
+         Class_IoU      : {0: 0.771, 1: 0.508, 2: 0.767, 3: 0.164, 4: 0.117, 5: 0.317, 6: 0.283, 7: 0.401, 8: 0.841, 9: 0.231, 10: 0.778, 11: 0.4, 12: 0.292, 13: 0.766, 14: 0.233, 15: 0.465, 16: 0.315, 17: 0.177, 18: 0.326}
+         Class_Dice     : {0: 0.856, 1: 0.608, 2: 0.851, 3: 0.21, 4: 0.158, 5: 0.46, 6: 0.374, 7: 0.514, 8: 0.903, 9: 0.294, 10: 0.845, 11: 0.495, 12: 0.372, 13: 0.84, 14: 0.265, 15: 0.513, 16: 0.358, 17: 0.222, 18: 0.419}
+
+## max
+$ python test.py -r saved/cityscapes/PSPNet/CrossEntropyLoss2d/T/05-04_13-08/checkpoint-epoch300.pth -p "max"
+
+TEST, Pred (max) | Loss: 0.159, PixelAcc: 0.99, Mean IoU: 0.49, Mean Dice 0.56 |: 100%|███████████| 84/84 [00:12<00:00,  6.52it/s]
+
+    ## TESTING Restuls for Model: PSPNet + Loss: CrossEntropyLoss2d + predict: max ## 
+         test_loss      : 0.15925
+         Pixel_Accuracy : 0.9879999756813049
+         Mean_IoU       : 0.48500001430511475
+         Mean_Dice      : 0.5649999976158142
+         Class_IoU      : {0: 0.768, 1: 0.489, 2: 0.759, 3: 0.133, 4: 0.099, 5: 0.295, 6: 0.257, 7: 0.387, 8: 0.836, 9: 0.208, 10: 0.769, 11: 0.372, 12: 0.272, 13: 0.751, 14: 0.204, 15: 0.395, 16: 0.268, 17: 0.152, 18: 0.303}
+         Class_Dice     : {0: 0.854, 1: 0.585, 2: 0.844, 3: 0.172, 4: 0.136, 5: 0.428, 6: 0.341, 7: 0.498, 8: 0.9, 9: 0.268, 10: 0.835, 11: 0.464, 12: 0.351, 13: 0.826, 14: 0.233, 15: 0.437, 16: 0.308, 17: 0.193, 18: 0.392}
+
+
+## threshold at 0.5
+$ python test.py -r saved/cityscapes/PSPNet/CrossEntropyLoss2d/T/05-04_13-08/checkpoint-epoch300.pth -p "T"
+
+TEST, Pred (T) | Loss: 0.159, PixelAcc: 0.99, Mean IoU: 0.50, Mean Dice 0.57 |: 100%|█████████████| 84/84 [00:13<00:00,  6.45it/s]
+
+    ## TESTING Restuls for Model: PSPNet + Loss: CrossEntropyLoss2d + predict: T ## 
+         test_loss      : 0.15925
+         Pixel_Accuracy : 0.9890000224113464
+         Mean_IoU       : 0.4959999918937683
+         Mean_Dice      : 0.574999988079071
+         Class_IoU      : {0: 0.772, 1: 0.478, 2: 0.762, 3: 0.136, 4: 0.109, 5: 0.29, 6: 0.265, 7: 0.39, 8: 0.841, 9: 0.201, 10: 0.77, 11: 0.363, 12: 0.273, 13: 0.769, 14: 0.219, 15: 0.422, 16: 0.307, 17: 0.158, 18: 0.325}
+         Class_Dice     : {0: 0.857, 1: 0.573, 2: 0.846, 3: 0.174, 4: 0.147, 5: 0.419, 6: 0.349, 7: 0.499, 8: 0.902, 9: 0.257, 10: 0.836, 11: 0.451, 12: 0.351, 13: 0.841, 14: 0.247, 15: 0.468, 16: 0.349, 17: 0.197, 18: 0.414}
+```
+
 
 Following is the original README file from [yassouali/pytorch-segmentation](https://github.com/yassouali/pytorch-segmentation)
 
