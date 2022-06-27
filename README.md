@@ -50,7 +50,7 @@ idx = torch.argmax(out_prob.data, dim=1, keepdims=True)
 predict_max = torch.zeros_like(out_prob.data, dtype=bool).scatter_(1, idx, True)
 ```
 
-### Usage in `pytorch-segmentation-rankseg`
+### Usage in `pytorch-segmentation-rankseg` (in subfolder)
 ```bash
 ## rankdice
 $ python test.py -r saved/cityscapes/PSPNet/CrossEntropyLoss2d/T/05-04_13-08/checkpoint-epoch300.pth -p "rankdice"
@@ -163,8 +163,13 @@ TEST, Pred (T) | Loss: 0.159, PixelAcc: 0.99, Mean IoU: 0.50, Mean Dice 0.57 |: 
 
 If you want to replicate the experiments in our papers, please check the folder `./pytorch-segmentation-rankseg` and its README file [Pytorch-segmentation-rankseg](./pytorch-segmentation-rankseg/README.md)
 
-## To-do list
+## To-do list 
 
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/statmlben/rankseg/pulls)
+[![Github](https://badges.aleen42.com/src/github.svg)](https://github.com/statmlben/rankseg)
+[![MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+- [ ] develop `rank_dice` for `numpy` and `tf2` 
 - [ ] develop a scalable`rank_IoU` with GPU-computing
 - [ ] develop a scalable `rank_dice` with non-overlapping segmentation
 - [ ] debug for `torch.backends.cudnn.flags(enabled=False, deterministic=True, benchmark=True)` when `enabled=True`
