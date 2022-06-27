@@ -2,27 +2,26 @@
 [![Python](https://badges.aleen42.com/src/python.svg)](https://www.python.org/)
 [![Github](https://badges.aleen42.com/src/github.svg)](https://github.com/statmlben/rankseg)
 [![MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/statmlben/rankseg/pulls)
 
 # 🎲 RankSEG: A Consistent Ranking-based Framework for Segmentation
 
 **RankDice** is a Python module for producing segmentation by `RankDice` framework based on an estimated probability. 
 
 - GitHub repo: [https://github.com/statmlben/rankseg](https://github.com/statmlben/rankseg)
-- Documentation: [https://rankseg.readthedocs.io](https://rankseg.readthedocs.io/en/latest/)
+<!-- - Documentation: [https://rankseg.readthedocs.io](https://rankseg.readthedocs.io/en/latest/) -->
 - Open Source: [MIT license](https://opensource.org/licenses/MIT)
-- Paper: [pdf]()
+<!-- - Paper: [pdf]() -->
 
 ## Installation
 
 ### Dependencies
 
-`rankseg` requires:
+`rankseg` requires **Python 3.9** + [Python libraries](./requirements.txt):
 
-| | | | | | |
-|-|-|-|-|-|-|
-| Python>=3.8 | numpy | torch | sklearn | scipy |
-
+```bash
+pip install -r requirements.txt
+```
 ### Source code
 
 You can check the latest sources with the command::
