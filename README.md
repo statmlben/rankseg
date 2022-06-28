@@ -9,9 +9,9 @@
 **RankDice** is a Python module for producing segmentation by `RankDice` framework based on an estimated probability. 
 
 - GitHub repo: [https://github.com/statmlben/rankseg](https://github.com/statmlben/rankseg)
-<!-- - Documentation: [https://rankseg.readthedocs.io](https://rankseg.readthedocs.io/en/latest/) -->
 - Open Source: [MIT license](https://opensource.org/licenses/MIT)
-<!-- - Paper: [pdf]() -->
+- Paper: [arXiv:2206.13086](https://arxiv.org/abs/2206.13086)
+<!-- - Documentation: [https://rankseg.readthedocs.io](https://rankseg.readthedocs.io/en/latest/) -->
 
 ## Installation
 
@@ -163,6 +163,22 @@ TEST, Pred (T) | Loss: 0.159, PixelAcc: 0.99, Mean IoU: 0.50, Mean Dice 0.57 |: 
 
 If you want to replicate the experiments in our papers, please check the folder `./pytorch-segmentation-rankseg` and its README file [Pytorch-segmentation-rankseg](./pytorch-segmentation-rankseg/README.md)
 
+
+## Citation
+If you use `RankSEG` for an academic publication, we would appreciate citations to the following paper:
+
+```
+@misc{dai2022rankseg,
+    doi = {10.48550/ARXIV.2206.13086},
+    url = {https://arxiv.org/abs/2206.13086},
+    author = {Dai, Ben and Li, Chunlin},
+    title = {RankSEG: A Consistent Ranking-based Framework for Segmentation},
+    publisher = {arXiv},
+    year = {2022},
+    copyright = {Creative Commons Attribution 4.0 International}
+}
+```
+
 ## To-do list 
 
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/statmlben/rankseg/pulls)
@@ -174,3 +190,4 @@ If you want to replicate the experiments in our papers, please check the folder 
 - [ ] develop a scalable `rank_dice` with non-overlapping segmentation
 - [ ] debug for `torch.backends.cudnn.flags(enabled=False, deterministic=True, benchmark=True)` when `enabled=True`
 - [ ] CUDA code to speed up the implementation based on `app=1`
+
