@@ -2,9 +2,9 @@
 
 This repo is forked from [yassouali/pytorch-segmentation](https://github.com/yassouali/pytorch-segmentation) with the following updates:
 
-- [x] `mDice` and `mIoU` are computed based on ...
+- [x] `mDice` and `mIoU` are computed based on Appendix A in [our paper](https://arxiv.org/pdf/2206.13086.pdf)
 - [x] More segmentation losses including `BCEWithLogitsLoss2d`, `BCEWithLogitsFocalLoss2d`, `BDiceLoss`, and `LogCoshDiceLoss` are added.
-- [x] Three procedures (`T`, `max`, `rankdice`) are included, where `T` indicates thresholding at 0.5, `max` indicates taking argmax over classes, `rankdice` indicates algo in ???. You can use one of them in train/val/test by setting `config.json`
+- [x] Three procedures (`T`, `max`, `rankdice`) are included, where `T` indicates thresholding at 0.5, `max` indicates taking argmax over classes, `rankdice` indicates algo in Algorithm 2 in [our paper](https://arxiv.org/pdf/2206.13086.pdf). You can use one of them in train/val/test by setting `config.json`
 - [x] Class of interest `CoI` to exclude some classes in testing, yet you still want to keep them in training. 
     ```json
         "predict": {"CoI": [0,1],
