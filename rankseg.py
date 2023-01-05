@@ -8,7 +8,7 @@ import torch.nn.functional as F
 from scipy.stats import rv_continuous
 import numpy as np
 
-def rank_dice(output, device, app=2, smooth=0., allow_overlap=True, truncate_mean=True, verbose=0):
+def rank_dice(output, device, app=2, smooth=0., allow_overlap=True, truncate_mean=True, pruning=True, verbose=0):
     """
     Produce the predicted segmentation by `rankdice` based on the estimated output probability.
 
@@ -89,7 +89,7 @@ def rank_dice(output, device, app=2, smooth=0., allow_overlap=True, truncate_mea
     for k in range(num_class):
         ## searching for optimal vol for each sample and each class
         for b in range(batch_size):
-            if sorted_prob[b,k,0] <= .5:
+            if (sorted_prob[b,k,0] <= .5) and pruning:
                 ## pruning for predicted TP = FP = 0
                 continue
             elif pb_mean[b,k] <= 50:
@@ -100,6 +100,10 @@ def rank_dice(output, device, app=2, smooth=0., allow_overlap=True, truncate_mea
                 app_tmp = app
             # print('TEST sample-%d; class-%d; mean_tau: %d; low_tau: %d, up_tau: %d' %(b, k, int(pb_mean[b,k]), low_class[b,k], up_tau[b,k]))
             if up_tau[b,k] <= low_class[b,k]:
+                opt_tau = up_tau[b,k]
+                predict[b, k, top_index[b,k,:opt_tau]] = True
+                tau_rd[b,k] = opt_tau
+                cutpoint_rd[b,k] = sorted_prob[b,k,opt_tau]
                 continue
             if app_tmp > 1:
                 pmf_tmp = PB_RNA(pb_mean[b,k],
@@ -157,6 +161,7 @@ def rank_dice(output, device, app=2, smooth=0., allow_overlap=True, truncate_mea
                                     pb_m3_tmp,
                                     device=device,
                                     up=up_class[b,k], low=low_class[b,k])
+                    
                     pmf_tmp = pmf_tmp / torch.sum(pmf_tmp)
                     w_old = w_old + sorted_prob[b,k,tau-1] * pmf_tmp
                     omega_tmp = torch.sum(2./(discount[low_class[b,k]:up_class[b,k]]+tau+smooth+2)*w_old)

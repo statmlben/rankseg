@@ -1,5 +1,12 @@
+# Author: Ben Dai <bendai@cuhk.edu.hk>
+# Example 1 in Simulation section
+# License: BSD 3 clause
+
 import os
 import torch
+import sys
+sys.path.append('../')
+
 from rankseg import rank_dice
 from metrics import dice_coeff
 import numpy as np
@@ -7,6 +14,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import figure
 import matplotlib.patches as mpatch
+from scipy.stats import truncnorm
 
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
@@ -28,6 +36,15 @@ def sim(base_=1.01, sample_size=1000, width=28, height=28, prob_type='exp'):
         prob = 1. - .5/width*base_*(index_mat)
         # prob = torch.where(prob < 0, 0, prob)
         prob[prob<0] = 0.
+    elif prob_type == 'step':
+        prob = truncnorm.rvs(0, 1, loc=base_, scale=0.1, size=(width, height))
+        prob = torch.from_numpy(prob)
+        prob = prob.cuda()
+        prob = prob.view(width, height)
+        # prob = 0.5*base_*torch.rand((width, height), device='cuda')
+        prob[:int(.1*width), :int(.1*height)] = 0.5*torch.rand((int(.1*width), int(.1*height)), device='cuda') + 0.5
+        prob[prob<0.] = 0.
+        prob[prob>1.] = 1.
     prob = prob.view(num_class, width, height)
 
     ## generate sample
@@ -35,7 +52,7 @@ def sim(base_=1.01, sample_size=1000, width=28, height=28, prob_type='exp'):
     for i in range(sample_size):
         target[i] = torch.bernoulli(prob)
 
-    predict, _, _ = rank_dice(prob.repeat(1, 1, 1, 1), device='cuda', app=2, smooth=0., alpha=0.2, truncate_mean=False, verbose=0)
+    predict, _, _ = rank_dice(prob.repeat(1, 1, 1, 1), device='cuda', app=2, smooth=0., truncate_mean=False, verbose=0)
     predict_T = (prob > .5)
 
     score_rank = dice_coeff(predict.repeat(sample_size, 1, 1, 1), target)
@@ -43,9 +60,9 @@ def sim(base_=1.01, sample_size=1000, width=28, height=28, prob_type='exp'):
 
     return [prob, score_rank, score_T, predict, predict_T]
 
-sample_size = 500
-for prob_type in ['linear']:
-    for base_ in [1., 2., 4.]:
+sample_size = 1000
+for prob_type in ['step']:
+    for base_ in [.1, .3, .5]:
         for width in [28, 64, 128, 256]:
             height = width
             prob, score_rank, score_T, pred_rd, pred_T = sim(base_=base_, sample_size=sample_size, width=width, height=height, prob_type=prob_type)
@@ -74,4 +91,5 @@ for prob_type in ['linear']:
             ax.annotate(r, (cx, cy), color='grey', weight='bold', 
                         fontsize=15, ha='center', va='center')
         plt.title('decay pattern: %s(%.3f)' %(prob_type, base_), fontsize=20)
+        plt.tight_layout()
         plt.show()
