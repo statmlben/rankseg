@@ -1,0 +1,99 @@
+{
+    "name": "DeepLab",
+    "n_gpu": 1,
+    "use_synch_bn": false,
+    "predict": {
+        "CoI": "all",
+        "train": "T",
+        "val": "T",
+        "test": "T"
+    }, 
+
+    "arch": {
+        "type": "DeepLab",
+        "args": {
+            "backbone": "resnet101",
+            "freeze_bn": false,
+            "freeze_backbone": false
+        }
+    },
+
+    "train_loader": {
+        "type": "CityScapes",
+        "args":{
+            "data_dir": "data/CityScapes",
+            "batch_size": 6,
+            "crop_size": 512,
+            "augment": true,
+            "shuffle": true,
+            "scale": true,
+            "flip": true,
+            "rotate": true,
+            "blur": false,
+            "split": "train",
+            "num_workers": 8
+        }
+    },
+
+    "val_loader": {
+        "type": "CityScapes",
+        "args":{
+            "data_dir": "data/CityScapes",
+            "batch_size": 6,
+            "crop_size": 512,
+            "val": true,
+            "split": "val",
+            "num_workers": 4
+        }
+    },
+
+    "test_loader": {
+        "type": "CityScapes",
+        "args":{
+            "data_dir": "data/CityScapes",
+            "batch_size": 6,
+            "crop_size": 512,
+            "val": true,
+            "split": "val",
+            "num_workers": 4
+        }
+    },
+
+    "optimizer": {
+        "type": "SGD",
+        "differential_lr": true,
+        "args":{
+            "lr": 0.01,
+            "weight_decay": 1e-4,
+            "momentum": 0.9
+        }
+    },
+
+    "loss": "LovaszSoftmax",
+    "ignore_index": 255,
+    "lr_scheduler": {
+        "type": "Poly",
+        "args": {}
+    },
+
+    "trainer": {
+        "epochs": 300,
+        "save_dir": "saved/cityscapes",
+        "save_period": 10,
+  
+        "monitor": "off",
+        "early_stop": 10,
+        
+        "tensorboard": true,
+        "log_dir": "saved/runs/cityscapes",
+        "log_per_iter": 20,
+
+        "val": true,
+        "val_per_epochs": 10
+    },
+
+    "tester": {
+        "tensorboard": true,
+        "out_dir": "test/runs/cityscapes"
+    }
+}
