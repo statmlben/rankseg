@@ -60,10 +60,11 @@ def sim(base_=1.01, sample_size=1000, width=28, height=28, prob_type='exp'):
 
     return [prob, score_rank, score_T, predict, predict_T]
 
-sample_size = 1000
-for prob_type in ['linear']:
-    for base_ in [1., 2., 4.]:
-        for width in [28, 64, 128, 256]:
+sample_size = 2
+for prob_type in ['step']:
+    for base_ in [.1, .3, .5]:
+        for width in [256]:
+        # for width in [28, 64, 128, 256]:
             height = width
             prob, score_rank, score_T, pred_rd, pred_T = sim(base_=base_, sample_size=sample_size, width=width, height=height, prob_type=prob_type)
             print('#'*20)
@@ -71,7 +72,7 @@ for prob_type in ['linear']:
             print('dice score: rankdice: %.3f(%.3f); T: %.3f(%.3f)' %(score_rank.mean(), score_rank.std()/np.sqrt(sample_size), score_T.mean(), score_T.std()/np.sqrt(sample_size)))
 
         figure(figsize=(20, 15), dpi=100)
-        ax = sns.heatmap(prob[0].cpu(), vmin=0, vmax=1, cmap="YlGnBu")
+        ax = sns.heatmap(prob[0].cpu(), vmin=0, vmax=1, cmap="YlGnBu", cbar=False)
         ax.set_xticks([])
         ax.set_yticks([])
 
@@ -90,6 +91,6 @@ for prob_type in ['linear']:
 
             ax.annotate(r, (cx, cy), color='grey', weight='bold', 
                         fontsize=20, ha='center', va='center')
-        plt.title('decay pattern: %s(%.3f)' %(prob_type, base_), fontsize=30)
+        plt.title('decay pattern: %s(%.3f)' %(prob_type, base_), fontsize=50)
         plt.tight_layout()
         plt.show()
