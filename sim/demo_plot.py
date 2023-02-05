@@ -1,5 +1,23 @@
 # Author: Ben Dai <bendai@cuhk.edu.hk>
+# Example 2 in Simulation section
 # License: BSD 3 clause
+
+import os
+import torch
+import sys
+sys.path.append('../')
+
+from metrics import dice_coeff
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+from matplotlib.pyplot import figure
+import matplotlib.patches as mpatch
+from torch.distributions import Beta
+from scipy.stats import truncnorm
+os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+
 
 import torch
 import math
@@ -152,7 +170,8 @@ def rank_dice(output, device, app=2, smooth=0., allow_overlap=True, truncate_mea
                 if smooth > 0:
                     best_score = smooth*torch.sum((1./(discount[low_class[b,k]:up_class[b,k]]+smooth))*pmf_tmp_zero)
                 w_old = torch.zeros(up_class[b,k]-low_class[b,k], dtype=torch.float32, device=device)
-                for tau in range(1, up_tau[b,k]+1):
+                hist = []
+                for tau in range(1, width*height-1):
                     pb_mean_tmp = torch.maximum(pb_mean[b,k] - sorted_prob[b,k,tau-1], torch.tensor(0))
                     pb_var_tmp = pb_var[b,k] - sorted_prob[b,k,tau-1]*(1 - sorted_prob[b,k,tau-1])
                     pb_m3_tmp = pb_m3[b,k] - sorted_prob[b,k,tau-1]*(1 - sorted_prob[b,k,tau-1])*(1 - 2*sorted_prob[b,k,tau-1])
@@ -171,13 +190,14 @@ def rank_dice(output, device, app=2, smooth=0., allow_overlap=True, truncate_mea
                     if score_tmp > best_score:
                         opt_tau = tau
                         best_score = score_tmp
-                    print('(tau, score_tmp): (%d, %.4f)' %(tau, score_tmp))
+                    # print('(tau, score_tmp): (%d, %.4f)' %(tau, score_tmp))
+                    hist.append([tau, score_tmp.cpu().numpy()])
                 if verbose == 1:
                     print('sample-%d; class-%d; mean_tau: %d; up_tau: %d; tau_best: %d; score_best: %.4f' %(b, k, int(pb_mean[b,k]), up_tau[b,k], opt_tau, best_score))
             predict[b, k, top_index[b,k,:opt_tau]] = True
             tau_rd[b,k] = opt_tau
             cutpoint_rd[b,k] = sorted_prob[b,k,opt_tau]
-    return predict.reshape(batch_size, num_class, width, height), tau_rd, cutpoint_rd
+    return predict.reshape(batch_size, num_class, width, height), tau_rd, cutpoint_rd, hist
 
 def app_action_set(pb_mean, pb_var, pb_m3, device, dim, tol=1e-4):
     refined_normal = RN_rv()
@@ -220,3 +240,75 @@ class RN_rv(rv_continuous):
         return np.isfinite(skew)
     def _cdf(self, x, skew):
         return scipy.stats.norm.cdf(x) + skew*(1 - x**2)*scipy.stats.norm.pdf(x)/6
+
+
+
+# simulation: Example 2
+def sim(base_=1.05, sample_size=1000, width=28, height=28, prob_type='exp'):
+    num_class = 1
+    dim = width * height
+
+    ## produce prob matrix 
+    if prob_type == 'exp':
+        index_mat = torch.arange(width, device='cuda').repeat(height, 1)
+        index_mat = index_mat + index_mat.T
+        prob = base_ ** (-index_mat)
+    elif prob_type == 'linear':
+        index_mat = torch.arange(width, device='cuda').repeat(height, 1)
+        index_mat = index_mat + index_mat.T
+        prob = 1. - .5/width*base_*(index_mat)
+        # prob = torch.where(prob < 0, 0, prob)
+        prob[prob<0] = 0.
+    elif prob_type == 'step':
+        prob = truncnorm.rvs(0, 1, loc=base_, scale=0.1, size=(width, height))
+        prob = torch.from_numpy(prob)
+        prob = prob.cuda()
+        prob = prob.view(width, height)
+        # prob = 0.5*base_*torch.rand((width, height), device='cuda')
+        prob[:int(.1*width), :int(.1*height)] = 0.5*torch.rand((int(.1*width), int(.1*height)), device='cuda') + 0.5
+        prob[prob<0.] = 0.
+        prob[prob>1.] = 1.
+    prob = prob.view(num_class, width, height)
+
+    ## generate sample
+    target = torch.zeros((sample_size, num_class, width, height), device='cuda')
+    for i in range(sample_size):
+        target[i] = torch.bernoulli(prob)
+
+    predict, _, _, hist_tmp = rank_dice(prob.repeat(1, 1, 1, 1), device='cuda', app=0, smooth=0., truncate_mean=False, verbose=1)
+    predict_T = (prob > .5)
+
+    score_rank = dice_coeff(predict.repeat(sample_size, 1, 1, 1), target)
+    score_T = dice_coeff(predict_T.repeat(sample_size, 1, 1, 1), target)
+
+    return [prob, score_rank, score_T, predict, predict_T, hist_tmp]
+
+for width in [28]:
+    height = width
+    n_images = 1
+    _, score_rank, score_T, cutpoint, _, hist_rkdice = sim(sample_size=5000, width=width, height=height)
+    print('#'*20)
+    print('width: %d; height: %d' %(width, height))
+    print('dice score: rankdice: %.3f(%.3f)\n T: %s(%s)' %(score_rank.mean(), score_rank.std()/np.sqrt(n_images), score_T.mean(axis=0), score_T.std(axis=0)/np.sqrt(n_images)))
+
+hist_rkdice = np.array(hist_rkdice)
+
+# sample-0; class-0; mean_tau: 244; up_tau: 630; tau_best: 378; score_best: 0.5481
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+sns.set_theme(style='white')
+sns.lineplot(x=hist_rkdice[:,0], y=hist_rkdice[:,1], linewidth=2.5)
+
+plt.axvline(378, 0, 1., color='red', alpha=0.5, ls='--')
+plt.text(378.1, 0, 'optimal tau', color='red', rotation=-90, size=15)
+plt.axvline(630, 0, 1., color='green', alpha=0.5, ls='dotted')
+plt.text(630.1, 0, 'upper bound provided in Lemma 3', color='green', rotation=-90, size=15)
+
+plt.xlabel(r'$\tau$') 
+plt.ylabel('Dice score') 
+
+# plt.title(r"Dice score vs $\tau$ based on a random example in Example 1. ")
+
+plt.tight_layout()
+plt.show()
