@@ -16,8 +16,8 @@ def get_instance(module, name, config, *args):
     return getattr(module, config[name]['type'])(*args, **config[name]['args'])
 
 def main(config, resume):
-    # resume = './saved/PSPNet/01-22_20-28/best_model.pth'
-    # config = './config.json'; config = json.load(open(config))
+    # resume = './saved/VOC/DeepLab/CrossEntropyLoss2d/max/03-29_16-20/best_model.pth'
+    # config = './saved/VOC/DeepLab/CrossEntropyLoss2d/max/03-29_16-20/config.json'; config = json.load(open(config))
     test_logger = Logger()
 
     # DATA LOADERS

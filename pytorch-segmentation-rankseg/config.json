@@ -3,10 +3,12 @@
     "n_gpu": 1,
     "use_synch_bn": false,
     "predict": {
+        "temperature": 1.0,
         "CoI": "all",
         "train": "T",
         "val": "T",
-        "test": "T"
+        "test": "T",
+        "threshold": 0.5
     }, 
 
     "arch": {
