@@ -161,7 +161,7 @@ TEST, Pred (T) | Loss: 0.159, PixelAcc: 0.99, Mean IoU: 0.50, Mean Dice 0.57 |: 
 - `Threshold`, `Argmax` and `rankDice` are performed based on the same network (in `Model` column) trained by the same loss (in `Loss` column). 
 - `Threshold` and `Argmax` are exactly the same in **binary segmentation**. 
 - Averaged mDice and mIoU based on state-of-the-art models/losses on **Kvasir-SEG dataset** set. '---' indicates that either the performance is significantly worse or the training is unstable, and '/' indicates not applicable since the proposed `RankDice`/`mRankDice` requires a strictly proper loss. The best performance in each model-loss pair is **bold-faced**.
-- All trained neural networks with different `network` and `loss` are saved in [this link](https://gocuhk-my.sharepoint.com/:f:/g/personal/bendai_cuhk_edu_hk/EkqD1EH7bBVImHcWowJ7jR8BfatVPsOFFGkSsfvMjm0juQ?e=6LO8vI) (**22G** folder: network/loss/.../*.pth)
+<!-- - All trained neural networks with different `network` and `loss` are saved in [this link](https://gocuhk-my.sharepoint.com/:f:/g/personal/bendai_cuhk_edu_hk/EkqD1EH7bBVImHcWowJ7jR8BfatVPsOFFGkSsfvMjm0juQ?e=6LO8vI) (**22G** folder: network/loss/.../*.pth) -->
 
 | Model       | Loss          | Threshold/Argmax           | mRankDice (our)                |
 |-------------|---------------|----------------------------|--------------------------------|
