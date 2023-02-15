@@ -156,6 +156,29 @@ TEST, Pred (T) | Loss: 0.159, PixelAcc: 0.99, Mean IoU: 0.50, Mean Dice 0.57 |: 
 |             | B-Soft-Dice   | ---                         | ---                          | /                            |
 |             | LovaszSoftmax | (39.80, 34.30)              | (37.30, 32.20)               | /                            |
 
+### Results in **Kvasir-SEG dataset**
+
+- `Threshold`, `Argmax` and `rankDice` are performed based on the same network (in `Model` column) trained by the same loss (in `Loss` column). 
+- `Threshold` and `Argmax` are exactly the same in **binary segmentation**. 
+- Averaged mDice and mIoU based on state-of-the-art models/losses on **Kvasir-SEG dataset** set. '---' indicates that either the performance is significantly worse or the training is unstable, and '/' indicates not applicable since the proposed `RankDice`/`mRankDice` requires a strictly proper loss. The best performance in each model-loss pair is **bold-faced**.
+- All trained neural networks with different `network` and `loss` are saved in [this link](https://gocuhk-my.sharepoint.com/:f:/g/personal/bendai_cuhk_edu_hk/EkqD1EH7bBVImHcWowJ7jR8BfatVPsOFFGkSsfvMjm0juQ?e=6LO8vI) (**22G** folder: network/loss/.../*.pth)
+
+| Model       | Loss          | Threshold/Argmax           | mRankDice (our)                |
+|-------------|---------------|----------------------------|--------------------------------|
+|             |               | (Dice, IoU) ($\times .01$) | (Dice, IoU) ($\times .01$)     |
+| DeepLab-V3+ | CE            | (87.9, 80.7)               | **(88.3, 80.9)**               |
+| (resnet101) | Focal         | (86.5, 87.3)               | /                              |
+|             | Soft-Dice     | (85.7, 77.8)               | /                              |
+|             | LovaszSoftmax | (84.3, 77.3)               | /                              |
+| PSPNet      | CE            | (86.3, 79.2)               | **(87.1, 79.8)**               |
+| (resnet50)  | Focal         | (83.8, 75.4)               | /                              |
+|             | Soft-Dice     | (83.5, 75.9)               | /                              |
+|             | LovaszSoftmax | (86.0, 79.2)               | /                              |
+| FCN8        | CE            | (81.9, 73.5)               | **(82.1, 73.6)**               |
+| (resnet101) | Focal         | (78.5, 69.0)               | /                              |
+|             | Soft-Dice     | ---                        | ---                            |
+|             | LovaszSoftmax | (82.0, 73.4)               | /                              |
+
 ### More results
 - All empirical results on different losses and models can be found [here](./results/test_out.md)
 

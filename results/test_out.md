@@ -1006,3 +1006,209 @@
          Mean_Dice      : 0.5699999928474426
          Class_IoU      : {0: 0.77, 1: 0.491, 2: 0.751, 3: 0.136, 4: 0.096, 5: 0.325, 6: 0.358, 7: 0.474, 8: 0.836, 9: 0.24, 10: 0.785, 11: 0.425, 12: 0.303, 13: 0.747, 14: 0.154, 15: 0.3, 16: 0.091, 17: 0.157, 18: 0.383}
          Class_Dice     : {0: 0.856, 1: 0.591, 2: 0.837, 3: 0.177, 4: 0.131, 5: 0.464, 6: 0.456, 7: 0.586, 8: 0.9, 9: 0.308, 10: 0.848, 11: 0.523, 12: 0.383, 13: 0.818, 14: 0.179, 15: 0.328, 16: 0.11, 17: 0.2, 18: 0.482}
+
+# TESTING Results for kvasirSEG dataset
+
+## PSPNet + resnet50
+
+## CrossEntropyLoss2d
+
+    - TESTING Restuls for Model: PSPNet + Loss: CrossEntropyLoss2d + predict: T + temperature: 1.00  - 
+         test_loss      : 0.1149
+         Pixel_Accuracy : 0.9599999785423279
+         Mean_IoU       : 0.7919999957084656
+         Mean_Dice      : 0.8629999756813049
+         Class_IoU      : {0: 0.951, 1: 0.792}
+         Class_Dice     : {0: 0.973, 1: 0.863}
+
+    - TESTING Restuls for Model: PSPNet + Loss: CrossEntropyLoss2d + predict: rankdice + temperature: 1.00  - 
+         test_loss      : 0.1149
+         Pixel_Accuracy : 0.9559999704360962
+         Mean_IoU       : 0.7979999780654907
+         Mean_Dice      : 0.8709999918937683
+         Class_IoU      : {0: 0.941, 1: 0.798}
+         Class_Dice     : {0: 0.963, 1: 0.871}
+
+## SoftDice
+
+    - TESTING Restuls for Model: PSPNet + Loss: DiceLoss + predict: T + temperature: 1.00  - 
+         test_loss      : 0.04352
+         Pixel_Accuracy : 0.9580000042915344
+         Mean_IoU       : 0.7590000033378601
+         Mean_Dice      : 0.8349999785423279
+         Class_IoU      : {0: 0.949, 1: 0.759}
+         Class_Dice     : {0: 0.972, 1: 0.835}
+
+    - TESTING Restuls for Model: PSPNet + Loss: DiceLoss + predict: rankdice + temperature: 1.00  - 
+         test_loss      : 0.04351
+         Pixel_Accuracy : 0.9380000233650208
+         Mean_IoU       : 0.7609999775886536
+         Mean_Dice      : 0.8370000123977661
+         Class_IoU      : {0: 0.901, 1: 0.761}
+         Class_Dice     : {0: 0.923, 1: 0.837}
+
+## FocalLoss
+
+    - TESTING Restuls for Model: PSPNet + Loss: FocalLoss + predict: T + temperature: 1.00  - 
+         test_loss      : 0.02794
+         Pixel_Accuracy : 0.9589999914169312
+         Mean_IoU       : 0.7540000081062317
+         Mean_Dice      : 0.8379999995231628
+         Class_IoU      : {0: 0.949, 1: 0.754}
+         Class_Dice     : {0: 0.973, 1: 0.838}
+
+    - TESTING Restuls for Model: PSPNet + Loss: FocalLoss + predict: rankdice + temperature: 1.00  - 
+         test_loss      : 0.02794
+         Pixel_Accuracy : 0.9480000138282776
+         Mean_IoU       : 0.7239999771118164
+         Mean_Dice      : 0.8180000185966492
+         Class_IoU      : {0: 0.945, 1: 0.724}
+         Class_Dice     : {0: 0.971, 1: 0.818}
+
+## LovaszSoftmax
+
+    - TESTING Restuls for Model: PSPNet + Loss: LovaszSoftmax + predict: T + temperature: 1.00  - 
+         test_loss      : 0.14043
+         Pixel_Accuracy : 0.9580000042915344
+         Mean_IoU       : 0.7919999957084656
+         Mean_Dice      : 0.8600000143051147
+         Class_IoU      : {0: 0.949, 1: 0.792}
+         Class_Dice     : {0: 0.972, 1: 0.86}
+
+    - TESTING Restuls for Model: PSPNet + Loss: LovaszSoftmax + predict: rankdice + temperature: 1.00  - 
+         test_loss      : 0.14043
+         Pixel_Accuracy : 0.953000009059906
+         Mean_IoU       : 0.7919999957084656
+         Mean_Dice      : 0.8600000143051147
+         Class_IoU      : {0: 0.94, 1: 0.792}
+         Class_Dice     : {0: 0.962, 1: 0.86}
+
+## DeepLab
+
+## CrossEntropyLoss2d
+
+    - TESTING Restuls for Model: DeepLab + Loss: CrossEntropyLoss2d + predict: T + temperature: 1.00  - 
+         test_loss      : 0.11959
+         Pixel_Accuracy : 0.9620000123977661
+         Mean_IoU       : 0.8069999814033508
+         Mean_Dice      : 0.8790000081062317
+         Class_IoU      : {0: 0.953, 1: 0.807}
+         Class_Dice     : {0: 0.975, 1: 0.879}
+
+    - TESTING Restuls for Model: DeepLab + Loss: CrossEntropyLoss2d + predict: rankdice + temperature: 1.00  - 
+         test_loss      : 0.11959
+         Pixel_Accuracy : 0.9620000123977661
+         Mean_IoU       : 0.8090000152587891
+         Mean_Dice      : 0.8830000162124634
+         Class_IoU      : {0: 0.954, 1: 0.809}
+         Class_Dice     : {0: 0.975, 1: 0.883}
+
+## DiceLoss
+
+    - TESTING Restuls for Model: DeepLab + Loss: DiceLoss + predict: T + temperature: 1.00  - 
+         test_loss      : 0.04208
+         Pixel_Accuracy : 0.9580000042915344
+         Mean_IoU       : 0.777999997138977
+         Mean_Dice      : 0.8569999933242798
+         Class_IoU      : {0: 0.948, 1: 0.778}
+         Class_Dice     : {0: 0.972, 1: 0.857}
+
+    - TESTING Restuls for Model: DeepLab + Loss: DiceLoss + predict: rankdice + temperature: 1.00  - 
+         test_loss      : 0.04208
+         Pixel_Accuracy : 0.9549999833106995
+         Mean_IoU       : 0.7789999842643738
+         Mean_Dice      : 0.8579999804496765
+         Class_IoU      : {0: 0.939, 1: 0.779}
+         Class_Dice     : {0: 0.962, 1: 0.858}
+
+## FocalLoss
+
+    - TESTING Restuls for Model: DeepLab + Loss: FocalLoss + predict: T + temperature: 1.00  - 
+         test_loss      : 0.03236
+         Pixel_Accuracy : 0.9589999914169312
+         Mean_IoU       : 0.7829999923706055
+         Mean_Dice      : 0.8650000095367432
+         Class_IoU      : {0: 0.949, 1: 0.783}
+         Class_Dice     : {0: 0.972, 1: 0.865}
+
+    - TESTING Restuls for Model: DeepLab + Loss: FocalLoss + predict: rankdice + temperature: 1.00  - 
+         test_loss      : 0.03236
+         Pixel_Accuracy : 0.9509999752044678
+         Mean_IoU       : 0.7319999933242798
+         Mean_Dice      : 0.8309999704360962
+         Class_IoU      : {0: 0.95, 1: 0.732}
+         Class_Dice     : {0: 0.973, 1: 0.831}
+
+## LovaszSoftmax
+
+    - TESTING Restuls for Model: DeepLab + Loss: LovaszSoftmax + predict: T + temperature: 1.00  - 
+         test_loss      : 0.14522
+         Pixel_Accuracy : 0.9559999704360962
+         Mean_IoU       : 0.7730000019073486
+         Mean_Dice      : 0.8429999947547913
+         Class_IoU      : {0: 0.947, 1: 0.773}
+         Class_Dice     : {0: 0.971, 1: 0.843}
+
+    - TESTING Restuls for Model: DeepLab + Loss: LovaszSoftmax + predict: rankdice + temperature: 1.00  - 
+         test_loss      : 0.14522
+         Pixel_Accuracy : 0.9559999704360962
+         Mean_IoU       : 0.7739999890327454
+         Mean_Dice      : 0.8450000286102295
+         Class_IoU      : {0: 0.947, 1: 0.774}
+         Class_Dice     : {0: 0.971, 1: 0.845}
+
+## FCN8
+
+## CrossEntropyLoss2d
+
+    - TESTING Restuls for Model: FCN8 + Loss: CrossEntropyLoss2d + predict: T + temperature: 1.00  - 
+         test_loss      : 0.12674
+         Pixel_Accuracy : 0.9539999961853027
+         Mean_IoU       : 0.7350000143051147
+         Mean_Dice      : 0.8190000057220459
+         Class_IoU      : {0: 0.944, 1: 0.735}
+         Class_Dice     : {0: 0.97, 1: 0.819}
+
+    - TESTING Restuls for Model: FCN8 + Loss: CrossEntropyLoss2d + predict: rankdice + temperature: 1.00  - 
+         test_loss      : 0.12674
+         Pixel_Accuracy : 0.9539999961853027
+         Mean_IoU       : 0.7360000014305115
+         Mean_Dice      : 0.8209999799728394
+         Class_IoU      : {0: 0.944, 1: 0.736}
+         Class_Dice     : {0: 0.97, 1: 0.821}
+
+## FocalLoss
+
+    - TESTING Restuls for Model: FCN8 + Loss: FocalLoss + predict: T + temperature: 1.00  - 
+         test_loss      : 0.0356
+         Pixel_Accuracy : 0.9470000267028809
+         Mean_IoU       : 0.6899999976158142
+         Mean_Dice      : 0.7850000262260437
+         Class_IoU      : {0: 0.935, 1: 0.69}
+         Class_Dice     : {0: 0.965, 1: 0.785}
+
+    - TESTING Restuls for Model: FCN8 + Loss: FocalLoss + predict: rankdice + temperature: 1.00  - 
+         test_loss      : 0.0356
+         Pixel_Accuracy : 0.9200000166893005
+         Mean_IoU       : 0.5830000042915344
+         Mean_Dice      : 0.703000009059906
+         Class_IoU      : {0: 0.936, 1: 0.583}
+         Class_Dice     : {0: 0.966, 1: 0.703}
+
+## LovaszSoftmax
+
+    - TESTING Restuls for Model: FCN8 + Loss: LovaszSoftmax + predict: T + temperature: 1.00  - 
+         test_loss      : 0.15023
+         Pixel_Accuracy : 0.953000009059906
+         Mean_IoU       : 0.734000027179718
+         Mean_Dice      : 0.8199999928474426
+         Class_IoU      : {0: 0.941, 1: 0.734}
+         Class_Dice     : {0: 0.968, 1: 0.82}
+
+    - TESTING Restuls for Model: FCN8 + Loss: LovaszSoftmax + predict: rankdice + temperature: 1.00  - 
+         test_loss      : 0.15023
+         Pixel_Accuracy : 0.9480000138282776
+         Mean_IoU       : 0.734000027179718
+         Mean_Dice      : 0.8199999928474426
+         Class_IoU      : {0: 0.932, 1: 0.734}
+         Class_Dice     : {0: 0.959, 1: 0.82}
