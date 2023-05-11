@@ -61,8 +61,8 @@ def sim(base_=1.01, sample_size=1000, width=28, height=28, prob_type='exp'):
     return [prob, score_rank, score_T, predict, predict_T]
 
 sample_size = 2
-for prob_type in ['step']:
-    for base_ in [.1, .3, .5]:
+for prob_type in ['exp']:
+    for base_ in [1.01, 1.05, 1.10]:
         for width in [256]:
         # for width in [28, 64, 128, 256]:
             height = width
@@ -77,20 +77,20 @@ for prob_type in ['step']:
         ax.set_yticks([])
 
         ## add box
-        rectangles = {'28x28' : mpatch.Rectangle((0,0), 28, 28, linewidth=3, edgecolor='lightsteelblue', facecolor='none'),
-                    '64x64' : mpatch.Rectangle((0,0), 64, 64, linewidth=3, edgecolor='cornflowerblue', facecolor='none'),
-                    '128x128' : mpatch.Rectangle((0,0), 128, 128, linewidth=3, edgecolor='royalblue', facecolor='none'),
-                    '256x256' : mpatch.Rectangle((0,0), 255.5, 255.5, linewidth=3, edgecolor='darkblue', facecolor='none'),
+        rectangles = {'28x28' : mpatch.Rectangle((0,0), 28, 28, linewidth=4, edgecolor='k', facecolor='none'),
+                    '64x64' : mpatch.Rectangle((0,0), 64, 64, linewidth=4, edgecolor='k', facecolor='none'),
+                    '128x128' : mpatch.Rectangle((0,0), 128, 128, linewidth=4, edgecolor='k', facecolor='none'),
+                    '256x256' : mpatch.Rectangle((0,0), 255.5, 255.5, linewidth=4, edgecolor='k', facecolor='none'),
                     }
 
         for r in rectangles:
             ax.add_artist(rectangles[r])
             rx, ry = rectangles[r].get_xy()
-            cx = rx + rectangles[r].get_width() - 12
-            cy = ry + rectangles[r].get_height() - 4
+            cx = rx + rectangles[r].get_width() - 16
+            cy = ry + rectangles[r].get_height() - 8
 
-            ax.annotate(r, (cx, cy), color='grey', weight='bold', 
-                        fontsize=20, ha='center', va='center')
-        plt.title('decay pattern: %s(%.3f)' %(prob_type, base_), fontsize=50)
+            ax.annotate(r, (cx, cy), color='black', weight='bold', 
+                        fontsize=36, ha='center', va='center')
+        plt.title('decay pattern: %s(%.3f)' %(prob_type, base_), fontsize=70)
         plt.tight_layout()
         plt.show()
