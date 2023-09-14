@@ -4,13 +4,13 @@
 [![MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/statmlben/rankseg/pulls)
 
-# 🎲 RankSEG: A Consistent Ranking-based Framework for Segmentation
+# 🎲 RankSEG: A Consistent Ranking-based Framework for Segmentation (JMLR 2023)
 
 **RankDice** is a Python module for producing segmentation by `RankDice` framework based on an estimated probability. 
 
 - GitHub repo: [https://github.com/statmlben/rankseg](https://github.com/statmlben/rankseg)
 - Open Source: [MIT license](https://opensource.org/licenses/MIT)
-- Paper: [arXiv:2206.13086](https://arxiv.org/abs/2206.13086)
+- Paper: [JMLR-v24-22-0712](https://www.jmlr.org/papers/v24/22-0712.html)
 <!-- - Documentation: [https://rankseg.readthedocs.io](https://rankseg.readthedocs.io/en/latest/) -->
 
 ## Installation
@@ -188,17 +188,17 @@ If you want to replicate the experiments in our papers, please check the folder 
 
 
 ## Citation
-If you use `RankSEG` for an academic publication, we would appreciate citations to the following paper:
+If you like `RankSEG` please star 🌟 the repository and cite the following paper:
 
-```
-@misc{dai2022rankseg,
-    doi = {10.48550/ARXIV.2206.13086},
-    url = {https://arxiv.org/abs/2206.13086},
-    author = {Dai, Ben and Li, Chunlin},
-    title = {RankSEG: A Consistent Ranking-based Framework for Segmentation},
-    publisher = {arXiv},
-    year = {2022},
-    copyright = {Creative Commons Attribution 4.0 International}
+```tex
+@article{dai2023rankseg,
+  title={RankSEG: A Consistent Ranking-based Framework for Segmentation},
+  author={Dai, Ben and Li, Chunlin},
+  journal={Journal of Machine Learning Research},
+  volume={24},
+  number={224},
+  pages={1--50},
+  year={2023}
 }
 ```
 
