@@ -9,9 +9,8 @@
 **RankDice** is a Python module for producing segmentation by `RankDice` framework based on an estimated probability. 
 
 - GitHub repo: [https://github.com/statmlben/rankseg](https://github.com/statmlben/rankseg)
-- Open Source: [MIT license](https://opensource.org/licenses/MIT)
+- Slides: [https://slides.com/statmlben/rankseg](https://slides.com/statmlben/rankseg)
 - Paper: [JMLR-v24-22-0712](https://www.jmlr.org/papers/v24/22-0712.html)
-<!-- - Documentation: [https://rankseg.readthedocs.io](https://rankseg.readthedocs.io/en/latest/) -->
 
 ## Installation
 
@@ -208,7 +207,7 @@ If you like `RankSEG` please star 🌟 the repository and cite the following pap
 [![Github](https://badges.aleen42.com/src/github.svg)](https://github.com/statmlben/rankseg)
 [![MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-- [ ] develop `rank_dice` for `numpy` and `tf2` 
+<!-- - [ ] develop `rank_dice` for `numpy` and `tf2`  -->
 - [ ] develop a scalable`rank_IoU` with GPU-computing
 - [ ] develop a scalable `rank_dice` with non-overlapping segmentation
 - [ ] debug for `torch.backends.cudnn.flags(enabled=False, deterministic=True, benchmark=True)` when `enabled=True`
