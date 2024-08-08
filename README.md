@@ -1,4 +1,3 @@
-[![dAI](https://img.shields.io/badge/CUHK-dAI-blueviolet)](https://bendai.org)
 [![Python](https://badges.aleen42.com/src/python.svg)](https://www.python.org/)
 [![Github](https://badges.aleen42.com/src/github.svg)](https://github.com/statmlben/rankseg)
 [![MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
