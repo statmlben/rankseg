@@ -3,29 +3,30 @@
 [![MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/statmlben/rankseg/pulls)
 
-# 🎲 RankSEG: A Consistent Ranking-based Framework for Segmentation (JMLR 2023)
+# RankSEG: A Consistent Ranking-based Framework for Segmentation (JMLR 2023)
 
-**RankDice** is a Python module for producing segmentation by `RankDice` framework based on an estimated probability. 
+**RankSEG** is a Python module designed for segmentation tasks, aiming to maximize **Dice** or **IoU** metrics based on estimated probabilities.
 
 - GitHub repo: [https://github.com/statmlben/rankseg](https://github.com/statmlben/rankseg)
 - Slides: [https://slides.com/statmlben/rankseg](https://slides.com/statmlben/rankseg)
 - Paper: [JMLR-v24-22-0712](https://www.jmlr.org/papers/v24/22-0712.html)
+- Poster: [ICML2024](./poster/rankseg-poster.png)
+
+## Key Features
+
+Most segmentation methods traditionally rely on **IoU** and **Dice** as evaluation metrics. During inference and prediction, these methods typically use a `threshold` of 0.5 or apply `argmax` to the estimated probabilities to generate segmentation predictions. However, this approach does **not** directly optimize the **IoU** or **Dice** metrics. 
+
+Our method, `RankDice`, directly optimizes IoU and Dice metrics.
+
+- Nearly ensures improved Dice and IoU performance!
+- Seamlessly integrates with any pretrained segmentation neural network (*no need to retrain the models*).
+- A well-developed Python function [rank_dice](https://github.com/statmlben/rankseg/blob/main/rankseg.py) is available for use.
 
 ## Installation
 
-### Dependencies
-
-`rankseg` requires **Python 3.9** + [Python libraries](./requirements.txt):
-
-```bash
-pip install -r requirements.txt
-```
-### Source code
-
-You can check the latest sources with the command::
-
 ```bash
 git clone https://github.com/statmlben/rankseg.git
+pip install -r requirements.txt
 ```
 
 ## How-to-Use (*on a batch*)
@@ -207,7 +208,6 @@ If you like `RankSEG` please star 🌟 the repository and cite the following pap
 [![MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 <!-- - [ ] develop `rank_dice` for `numpy` and `tf2`  -->
-- [ ] develop a scalable`rank_IoU` with GPU-computing
 - [ ] develop a scalable `rank_dice` with non-overlapping segmentation
 - [ ] debug for `torch.backends.cudnn.flags(enabled=False, deterministic=True, benchmark=True)` when `enabled=True`
 - [ ] CUDA code to speed up the implementation based on `app=1`
