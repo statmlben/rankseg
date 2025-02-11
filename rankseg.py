@@ -8,7 +8,7 @@ import torch.nn.functional as F
 from scipy.stats import rv_continuous
 import numpy as np
 
-def rank_dice(output, device, app=2, smooth=0., allow_overlap=True, truncate_mean=True, pruning=True, verbose=0):
+def rank_dice(output, device, app=2, smooth=0., allow_overlap=True, truncate_mean=False, pruning=True, verbose=0):
     """
     Produce the predicted segmentation by `rankdice` based on the estimated output probability.
 
