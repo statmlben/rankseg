@@ -201,14 +201,14 @@ If you like `RankSEG` please star 🌟 the repository and cite the following pap
 }
 ```
 
-## To-do list 
-
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/statmlben/rankseg/pulls)
 [![Github](https://badges.aleen42.com/src/github.svg)](https://github.com/statmlben/rankseg)
 [![MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-<!-- - [ ] develop `rank_dice` for `numpy` and `tf2`  -->
-- [ ] develop a scalable `rank_dice` with non-overlapping segmentation
-- [ ] debug for `torch.backends.cudnn.flags(enabled=False, deterministic=True, benchmark=True)` when `enabled=True`
-- [ ] CUDA code to speed up the implementation based on `app=1`
+## Thank you
 
+If you find this repository helpful, please star our repo 🌟.
+
+Thank you so much for the support from our stargazers.
+
+[![Stargazers repo roster for @statmlben/rankseg](https://reporoster.com/stars/statmlben/rankseg)](https://github.com/statmlben/rankseg/stargazers)
