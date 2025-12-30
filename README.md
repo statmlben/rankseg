@@ -5,12 +5,20 @@
 
 # RankSEG: A Consistent Ranking-based Framework for Segmentation (JMLR 2023)
 
+## About This Repository
+
+> ⚠️ **Note:** This is the *experiment reproduction* repository for our JMLR paper.  
+> For the **RankSEG software package** (installation & usage), please visit:  
+> 👉 [https://github.com/rankseg/rankseg](https://github.com/rankseg/rankseg)
+
 **RankSEG** is a Python module designed for segmentation tasks, aiming to maximize **Dice** or **IoU** metrics based on estimated probabilities.
 
 - GitHub repo: [https://github.com/statmlben/rankseg](https://github.com/statmlben/rankseg)
 - Slides: [https://slides.com/statmlben/rankseg](https://slides.com/statmlben/rankseg)
 - Paper: [JMLR-v24-22-0712](https://www.jmlr.org/papers/v24/22-0712.html)
 - Poster: [ICML2024](./poster/rankseg-poster.png)
+
+
 
 ## Key Features
 
